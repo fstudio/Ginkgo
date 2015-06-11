@@ -14,109 +14,13 @@
         WindowTransitionsEnabled="False"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
-        Title="Metro Script Editor" Height="500" Width="800" Icon="Ginkgo.ico" FontFamily="Segoe UI">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Ginkgo;component/Resources/Icons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-
-    <Controls:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content, Converter={StaticResource ToUpperConverter}}"
-                       TextTrimming="CharacterEllipsis"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       Margin="0 -1 8 0"
-                       FontSize="15px"
-                       FontFamily="Segoe UI" />
-        </DataTemplate>
-    </Controls:MetroWindow.TitleTemplate>
-
-    <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl>
-            <Controls:Flyout 
-                             Position="Top" x:Name="flyoutSwitchBlock">
-                <StackPanel Height="150"
-                            Margin="5,5,5,5"
-                            HorizontalAlignment="Left"
-                            Orientation="Horizontal">
-                    <zone:SwitchTips Margin="10,40" x:Name="mSwitchTips" Width="100" Height="40" />
-                </StackPanel>
-            </Controls:Flyout>
-            <Controls:Flyout Header="File Properties:"
-                             Position="Right"
-                             x:Name="flyoutFileProperties"
-                             Theme="Inverse">
-                <Grid Margin="10"
-                      Width="360">
-                    <TextBlock  HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" FontSize="15px">File:</TextBlock>
-                    <TextBlock  HorizontalAlignment="Left"
-					Margin="70,20,0,0"
-                    x:Name="TextFileName"
-					VerticalAlignment="Top" FontSize="15px"  Width="270" TextWrapping="Wrap" Text=" "/>
-                    <TextBlock  HorizontalAlignment="Left" Margin="20,60,0,0" VerticalAlignment="Top" Height="30" FontSize="15px">Size:</TextBlock>
-                    <TextBlock x:Name="FilePhySize"
-                    HorizontalAlignment="Left"  
-					Margin="70,60,0,0" Height="30" VerticalAlignment="Top"  FontSize="15px"/>
-                    <TextBlock  HorizontalAlignment="Left" Margin="20,100,0,0" VerticalAlignment="Top" Height="30" FontSize="15px">Wrap:</TextBlock>
-                    <ComboBox  Margin="70,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="27">
-                        <ComboBoxItem>CRLF(Windows)</ComboBoxItem>
-                        <ComboBoxItem>LF(Unix)</ComboBoxItem>
-                    </ComboBox>
-                </Grid>
-            </Controls:Flyout>
-        </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts>
-    <Controls:MetroWindow.RightWindowCommands>
-        <Controls:WindowCommands>
-            <Button Click="ShowTopSwitch">
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
-                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill"
-                         Visual="{StaticResource appbar_app_minus}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                    <TextBlock Margin="4 0 0 0"
-                   VerticalAlignment="Center"
-                   Text="Switch" />
-                </StackPanel>
-            </Button>
-            <Button Click="FilePropertiesView" >
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
-                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill"
-                         Visual="{StaticResource appbar_list_gear}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                    <TextBlock Margin="4 0 0 0"
-                   VerticalAlignment="Center"
-                   Text="Properties" />
-                </StackPanel>
-            </Button>
-            <Button>
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
-                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill"
-                         Visual="{StaticResource appbar_console}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                    <TextBlock Margin="4 0 0 0"
-                   VerticalAlignment="Center"
-                   Text="Shell" />
-                </StackPanel>
-            </Button>
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.RightWindowCommands>
+        Title="Ginkgo Batch Editor" TitleCaps="False" Height="500" Width="800" FontFamily="Segoe UI">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBar" 
+                         Overlay="Ginkgo.ico"
+                         Description="Ginkgo Taskbar Items">
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

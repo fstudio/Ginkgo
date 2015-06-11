@@ -10,7 +10,7 @@
         xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
-        Title="PropertiesSetting" Height="300" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/Ginkgo;component/Ginkgo.ico">
+        Title="Properties Setting" Height="300" Width="500" ResizeMode="NoResize" TitleCaps="False">
     <Grid>
         
     </Grid>

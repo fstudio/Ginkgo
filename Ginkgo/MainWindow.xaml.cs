@@ -40,7 +40,7 @@ namespace Ginkgo
             get;
             set;
         }
-        private String OriginTitle = "Metro Editor";
+        private String OriginTitle = "Ginkgo";
         public MainWindow()
         {
             IHighlightingDefinition batchHighlighting;
@@ -122,32 +122,6 @@ namespace Ginkgo
                 string filename = dlg.FileName;
             }
 
-        }
-
-        private void FilePropertiesView(object sender, RoutedEventArgs e)
-        {
-            if (flyoutFileProperties == null)
-            {
-                return;
-            }
-            if(File.Exists(currentFile))
-            {
-                FileInfo finfo = new FileInfo(currentFile);
-                FilePhySize.Text = String.Format("{0:N0} Byte", finfo.Length);
-            }
-
-            TextFileName.Text = currentFile;
-            flyoutFileProperties.IsOpen = !flyoutFileProperties.IsOpen;
-        }
-
-        private void ShowTopSwitch(object sender, RoutedEventArgs e)
-        {
-            if (flyoutSwitchBlock == null)
-            {
-                return;
-            }
-            mSwitchTips.SetFileName(currentFile);
-            flyoutSwitchBlock.IsOpen = !flyoutSwitchBlock.IsOpen;
         }
     }
 }

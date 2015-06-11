@@ -8,11 +8,11 @@ using System.Windows;
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Ginkgo")]
-[assembly: AssemblyDescription("I Shell Script Editor")]
+[assembly: AssemblyDescription("Batch Script Editor")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The Force Studio")]
 [assembly: AssemblyProduct("Ginkgo")]
-[assembly: AssemblyCopyright("Copyright ©  2014 ForceStudio . All Rights Reserved.")]
+[assembly: AssemblyCopyright("Copyright ©  2015 ForceStudio . All Rights Reserved.")]
 [assembly: AssemblyTrademark("ForceStudio")]
 [assembly: AssemblyCulture("")]
 
