@@ -12,6 +12,6 @@
         BorderThickness="1"
         Title="Properties Setting" Height="300" Width="500" ResizeMode="NoResize" TitleCaps="False">
     <Grid>
-        
+
     </Grid>
-    </controls:MetroWindow>
+</controls:MetroWindow>

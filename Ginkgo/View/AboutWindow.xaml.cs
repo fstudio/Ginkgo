@@ -25,7 +25,7 @@ namespace Ginkgo.View
         public AboutWindow()
         {
             InitializeComponent();
-            copyContent.Text=String.Format("Copyright © {0} ForceStudio. All Rights Reserved.",System.DateTime.Now.Year);
+            copyContent.Text = String.Format("Copyright © {0} Force Charlie. All Rights Reserved.", System.DateTime.Now.Year);
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

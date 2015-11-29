@@ -10,13 +10,13 @@
         xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
-        Title="Ginkgo Editor" Height="250" Width="300" ResizeMode="NoResize" TitleCaps="False" WindowStartupLocation="Manual" Topmost="True" >
+        Title="Ginkgo Editor" Height="270" Width="320" ResizeMode="NoResize" TitleCaps="False" WindowStartupLocation="CenterOwner"  Topmost="True" >
     <Grid>
-        <TextBlock Margin="10,10" FontFamily="Arial Narrow" FontSize="27px" HorizontalAlignment="Left" VerticalAlignment="Top">About Ginkgo</TextBlock>
-        <TextBlock Margin="10,50" x:Name="copyContent" FontFamily="Segoe UI" FontSize="15px" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap"/>
-        <TextBlock Margin="10,100" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+        <TextBlock Margin="10,10" FontFamily="Arial Narrow" FontSize="27px" HorizontalAlignment="Center" VerticalAlignment="Top">About Ginkgo</TextBlock>
+        <TextBlock Margin="10,60" HorizontalAlignment="Center" VerticalAlignment="Top">
             Visit Official Site: <Hyperlink NavigateUri="http://forcemz.net" RequestNavigate="Hyperlink_RequestNavigate">forcemz.net</Hyperlink>
         </TextBlock>
-        <Button Margin="0,120,0,0" Width="100" Height="30" HorizontalAlignment="Center" Click="CloseAboutWindow">OK</Button>
+        <TextBlock Margin="50,100" Height="60" x:Name="copyContent" FontFamily="Segoe UI" FontSize="15px" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="WrapWithOverflow"/>
+        <Button Margin="0,135,0,0" Width="100" Height="30" HorizontalAlignment="Center" Click="CloseAboutWindow">OK</Button>
     </Grid>
 </controls:MetroWindow>

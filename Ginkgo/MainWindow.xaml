@@ -34,9 +34,9 @@
                 </MenuItem>
                 <MenuItem Header="Open" Click="OpenScriptFile"></MenuItem>
                 <MenuItem Header="Sava" Click="SavaScriptFile"></MenuItem>
-                <MenuItem Header="Sava As"></MenuItem>
+                <MenuItem Header="Sava As" Click="SavaAsScriptFile"></MenuItem>
                 <MenuItem Header="Advanced Sava options"></MenuItem>
-                <MenuItem Header="Close"></MenuItem>
+                <MenuItem Header="Close" Click="CloseScriptFile"></MenuItem>
                 <Separator />
                 <MenuItem Header="Exit" Click="ExitApplication"></MenuItem>
             </MenuItem>
@@ -81,14 +81,14 @@
     Name="textEditor"
     FontFamily="Segoe UI"
     SyntaxHighlighting="Batch"
-    FontSize="11pt" Grid.Row="1" Margin="7,0,2,0">
+    FontSize="11pt" Grid.Row="1" TextChanged="EditorTextChanged" Margin="7,0,2,0">
             <ContextMenuService.ContextMenu>
                 <ContextMenu FontSize="9pt">
                     <MenuItem Header="Cut" Command="Cut" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}"></MenuItem>
                     <MenuItem Header="Copy" Command="Copy" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}"></MenuItem>
                     <MenuItem Header="Paste" Command="Paste" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}"></MenuItem>
                     <Separator/>
-                    <MenuItem Header="Open Current Folder"></MenuItem>
+                    <MenuItem Header="Open Current Folder" Click="OpenCurrentFolder"></MenuItem>
                 </ContextMenu>
             </ContextMenuService.ContextMenu>
         </avalonEdit:TextEditor>

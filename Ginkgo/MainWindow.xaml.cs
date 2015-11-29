@@ -40,7 +40,22 @@ namespace Ginkgo
             get;
             set;
         }
-        private String OriginTitle = "Ginkgo";
+        private void UpdateTitle()
+        {
+            String title = "Ginkgo Batch Editor ";
+            if (currentFile != null)
+            {
+                title += " - ";
+                title +=System.IO.Path.GetFileName(currentFile);
+            }
+            if (editorModify)
+            {
+                title += " *";
+            }
+            this.Title = title;
+        }
+        private bool editorModify;
+        private bool loadFile;
         public MainWindow()
         {
             IHighlightingDefinition batchHighlighting;
@@ -56,12 +71,9 @@ namespace Ginkgo
                     HighlightingLoader.Load(reader, HighlightingManager.Instance);
                 }
             }
-            // and register it in the HighlightingManager
             HighlightingManager.Instance.RegisterHighlighting("Batch", new string[] { ".cmd", ".bat", ".nt" }, batchHighlighting);
-            //textEditor.SyntaxHighlighting = batchHighlighting;
             InitializeComponent();
             ThemeManager.ChangeAppTheme(this, "BaseDark");
-            //TextFileName.SetBinding(TextBox.TextProperty, new Binding("/Text") { Source = currentFile, Mode = BindingMode.OneWay });
         }
 
         private void OpenAboutWindow(object sender, RoutedEventArgs e)
@@ -80,48 +92,145 @@ namespace Ginkgo
             View.PropertiesSetting vpropertiess = new View.PropertiesSetting();
             vpropertiess.Show();
         }
-
+        private async void BatchFileIsModifyShow(object sender, RoutedEventArgs e)
+        {
+            var mySettings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "Save",
+                NegativeButtonText = "Discard",
+                FirstAuxiliaryButtonText = "Cancel",
+                ColorScheme = MetroDialogOptions.ColorScheme
+            };
+            MessageDialogResult result = await this.ShowMessageAsync("Batch File is modify",
+                "Do your want to save file ,or Discard modify,or cancel", 
+                MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary,mySettings);
+            switch (result)
+            {
+                case MessageDialogResult.Affirmative:
+                    SavaScriptFile(sender, e);
+                    OpenScriptFile(sender, e);
+                    break;
+                case MessageDialogResult.Negative:
+                    OpenScriptFile(sender, e);
+                    break;
+                case MessageDialogResult.FirstAuxiliary:
+                    return;
+                default:
+                    break;
+            }
+        }
         private void OpenScriptFile(object sender, RoutedEventArgs e)
         {
-            // Configure open file dialog box
+            if (currentFile != null && editorModify)
+            {
+                BatchFileIsModifyShow(sender, e);
+                return;
+            }
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".bat"; // Default file extension
             dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|All Files(*.*)|*.*"; // Filter files by extension
-
-            // Show open file dialog box
             Nullable<bool> result = dlg.ShowDialog();
-
-            // Process open file dialog box results
             if (result == true)
             {
-                // Open document
-               currentFile = dlg.FileName;
+                currentFile = dlg.FileName;
                 using (StreamReader reader = File.OpenText(currentFile))
                 {
                     this.textEditor.Text = reader.ReadToEnd();
-                    this.Title =OriginTitle+ " - " + currentFile.Substring(currentFile.LastIndexOf("\\")+1);
+                    editorModify = false;
+                    loadFile = true;
+                    UpdateTitle();
                 }
 
             }
 
         }
-
+        private static void WriteFile(String path,String contents)
+        {
+            StreamWriter FileWriter = null;
+            try
+            {
+                FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+                FileWriter = new StreamWriter(fileStream);
+                FileWriter.Write(contents);
+            }
+            finally
+            {
+                if (FileWriter != null)
+                {
+                    FileWriter.Close();
+                }
+            }
+        }
         private void SavaScriptFile(object sender, RoutedEventArgs e)
         {
+            if (currentFile == null)
+            {
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+                dlg.DefaultExt = ".bat"; 
+                dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*"; 
+                Nullable<bool> result = dlg.ShowDialog();
+                if (result == true)
+                {
+                    currentFile = dlg.FileName;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            WriteFile(currentFile, this.textEditor.Text);
+            editorModify = false;
+            UpdateTitle();
+        }
+
+        private void SavaAsScriptFile(object sender, RoutedEventArgs e)
+        {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.DefaultExt = ".bat"; // Default file extension
-            dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*"; // Filter files by extension
-
-            // Show save file dialog box
+            dlg.DefaultExt = ".bat";
+            dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*";
             Nullable<bool> result = dlg.ShowDialog();
-
-            // Process save file dialog box results
             if (result == true)
             {
-                // Save document
-                string filename = dlg.FileName;
+                WriteFile(dlg.FileName, this.textEditor.Text);
+                currentFile = dlg.FileName;
+                editorModify = false;
+                UpdateTitle();
             }
+            else
+            {
+                return;
+            }
+        }
+        private void OpenCurrentFolder(object sender, RoutedEventArgs e)
+        {
+            var dir = System.IO.Path.GetDirectoryName(currentFile);
+            if(dir!=null)
+                System.Diagnostics.Process.Start("Explorer.exe", dir);
+        }
 
+        private void EditorTextChanged(object sender, EventArgs e)
+        {
+            if (loadFile)
+            {
+                loadFile = false;
+                return;
+            }
+            if (!editorModify)
+            {
+                editorModify = true;
+                UpdateTitle();
+            }
+        }
+
+        private void CloseScriptFile(object sender, RoutedEventArgs e)
+        {
+            if (editorModify)
+            {
+                SavaScriptFile(sender, e);
+            }
+            currentFile = null;
+            this.textEditor.Text = "";
+            UpdateTitle();
         }
     }
 }
