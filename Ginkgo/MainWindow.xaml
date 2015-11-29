@@ -14,7 +14,7 @@
         WindowTransitionsEnabled="False"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
-        Title="Ginkgo Batch Editor" TitleCaps="False" Height="500" Width="800" FontFamily="Segoe UI">
+        Title="Ginkgo Batch Editor" TitleCaps="False" Height="500" Width="800" Closing="OnCloseWindow" FontFamily="Segoe UI">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskBar" 
                          Overlay="Ginkgo.ico"
@@ -32,13 +32,13 @@
             <MenuItem Header="_File">
                 <MenuItem Header="New">
                 </MenuItem>
-                <MenuItem Header="Open" Click="OpenScriptFile"></MenuItem>
-                <MenuItem Header="Sava" Click="SavaScriptFile"></MenuItem>
-                <MenuItem Header="Sava As" Click="SavaAsScriptFile"></MenuItem>
+                <MenuItem Header="Open" Click="MenuOpenEventMethod"></MenuItem>
+                <MenuItem Header="Sava" Click="MenuSaveEventMethod"></MenuItem>
+                <MenuItem Header="Sava As" Click="MenuSaveAsEventMethod"></MenuItem>
                 <MenuItem Header="Advanced Sava options"></MenuItem>
-                <MenuItem Header="Close" Click="CloseScriptFile"></MenuItem>
+                <MenuItem Header="Close" Click="MenuCloseEventMethod"></MenuItem>
                 <Separator />
-                <MenuItem Header="Exit" Click="ExitApplication"></MenuItem>
+                <MenuItem Header="Exit" Click="OnExitApp"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="Undo" Command="Undo"  ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}"></MenuItem>

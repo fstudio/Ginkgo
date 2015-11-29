@@ -46,7 +46,7 @@ namespace Ginkgo
             if (currentFile != null)
             {
                 title += " - ";
-                title +=System.IO.Path.GetFileName(currentFile);
+                title += System.IO.Path.GetFileName(currentFile);
             }
             if (editorModify)
             {
@@ -75,23 +75,73 @@ namespace Ginkgo
             InitializeComponent();
             ThemeManager.ChangeAppTheme(this, "BaseDark");
         }
-
+        private static void WriteFile(String path, String contents)
+        {
+            StreamWriter FileWriter = null;
+            try
+            {
+                FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+                FileWriter = new StreamWriter(fileStream);
+                FileWriter.Write(contents);
+            }
+            finally
+            {
+                if (FileWriter != null)
+                {
+                    FileWriter.Close();
+                }
+            }
+        }
+        private bool SaveFile()
+        {
+            if (currentFile == null)
+            {
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+                dlg.DefaultExt = ".bat";
+                dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*";
+                Nullable<bool> result = dlg.ShowDialog();
+                if (result == true)
+                {
+                    currentFile = dlg.FileName;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            WriteFile(currentFile, this.textEditor.Text);
+            editorModify = false;
+            UpdateTitle();
+            return true;
+        }
         private void OpenAboutWindow(object sender, RoutedEventArgs e)
         {
             View.AboutWindow about = new View.AboutWindow();
             about.ShowDialog();
         }
-
-        private void ExitApplication(object sender, RoutedEventArgs e)
+        private void OnExitApp(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
-
+        private void OnCloseWindow(object sender, CancelEventArgs e)
+        {
+            if (editorModify)
+            {
+                var v = MessageBox.Show("Do you want to save this file ?",
+                    "Batch File is modify !",
+                    MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (v == MessageBoxResult.Yes)
+                {
+                    SaveFile();
+                }
+            }
+        }
         private void OpenPropertiesSettingWindow(object sender, RoutedEventArgs e)
         {
             View.PropertiesSetting vpropertiess = new View.PropertiesSetting();
             vpropertiess.Show();
         }
+
         private async void BatchFileIsModifyShow(object sender, RoutedEventArgs e)
         {
             var mySettings = new MetroDialogSettings()
@@ -102,16 +152,16 @@ namespace Ginkgo
                 ColorScheme = MetroDialogOptions.ColorScheme
             };
             MessageDialogResult result = await this.ShowMessageAsync("Batch File is modify",
-                "Do your want to save file ,or Discard modify,or cancel", 
-                MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary,mySettings);
+                "Do your want to save file ,or Discard modify,or cancel",
+                MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary, mySettings);
             switch (result)
             {
                 case MessageDialogResult.Affirmative:
-                    SavaScriptFile(sender, e);
-                    OpenScriptFile(sender, e);
+                   SaveFile();;
+                    MenuOpenEventMethod(sender, e);
                     break;
                 case MessageDialogResult.Negative:
-                    OpenScriptFile(sender, e);
+                    MenuOpenEventMethod(sender, e);
                     break;
                 case MessageDialogResult.FirstAuxiliary:
                     return;
@@ -119,7 +169,7 @@ namespace Ginkgo
                     break;
             }
         }
-        private void OpenScriptFile(object sender, RoutedEventArgs e)
+        private void MenuOpenEventMethod(object sender, RoutedEventArgs e)
         {
             if (currentFile != null && editorModify)
             {
@@ -144,46 +194,19 @@ namespace Ginkgo
             }
 
         }
-        private static void WriteFile(String path,String contents)
+        private void MenuSaveEventMethod(object sender, RoutedEventArgs e)
         {
-            StreamWriter FileWriter = null;
-            try
+            if (SaveFile())
             {
-                FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
-                FileWriter = new StreamWriter(fileStream);
-                FileWriter.Write(contents);
+                /// This success
             }
-            finally
+            else
             {
-                if (FileWriter != null)
-                {
-                    FileWriter.Close();
-                }
+
             }
-        }
-        private void SavaScriptFile(object sender, RoutedEventArgs e)
-        {
-            if (currentFile == null)
-            {
-                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-                dlg.DefaultExt = ".bat"; 
-                dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*"; 
-                Nullable<bool> result = dlg.ShowDialog();
-                if (result == true)
-                {
-                    currentFile = dlg.FileName;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            WriteFile(currentFile, this.textEditor.Text);
-            editorModify = false;
-            UpdateTitle();
         }
 
-        private void SavaAsScriptFile(object sender, RoutedEventArgs e)
+        private void MenuSaveAsEventMethod(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".bat";
@@ -201,10 +224,20 @@ namespace Ginkgo
                 return;
             }
         }
+        private void MenuCloseEventMethod(object sender, RoutedEventArgs e)
+        {
+            if (editorModify)
+            {
+                MenuSaveEventMethod(sender, e);
+            }
+            currentFile = null;
+            this.textEditor.Text = "";
+            UpdateTitle();
+        }
         private void OpenCurrentFolder(object sender, RoutedEventArgs e)
         {
             var dir = System.IO.Path.GetDirectoryName(currentFile);
-            if(dir!=null)
+            if (dir != null)
                 System.Diagnostics.Process.Start("Explorer.exe", dir);
         }
 
@@ -220,17 +253,6 @@ namespace Ginkgo
                 editorModify = true;
                 UpdateTitle();
             }
-        }
-
-        private void CloseScriptFile(object sender, RoutedEventArgs e)
-        {
-            if (editorModify)
-            {
-                SavaScriptFile(sender, e);
-            }
-            currentFile = null;
-            this.textEditor.Text = "";
-            UpdateTitle();
         }
     }
 }
