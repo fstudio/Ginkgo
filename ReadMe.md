@@ -1,7 +1,9 @@
 ##Ginkgo
-C# Base Batch Like Editor
+Ginkgo is a Simple Batch Editor,Based C# WPF .
+Use MahsApp.Metro Control. and AvalonEdit Edit-Control
+
 
 ![Image](Images/UI.png)
 
 ###Info
-Copyright &copy; 2015 ForceStudio. All Rights Reserved.
+Copyright &copy; 2015 Force Charlie. All Rights Reserved.

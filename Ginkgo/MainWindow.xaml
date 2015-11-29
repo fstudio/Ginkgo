@@ -65,7 +65,7 @@
                 <MenuItem Header="Properties" Click="OpenPropertiesSettingWindow"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Run">
-                <MenuItem Header="Debug"></MenuItem>
+                <MenuItem Header="Debugger"></MenuItem>
                 <MenuItem Header="Run"></MenuItem>
                 <MenuItem Header="Param"></MenuItem>
             </MenuItem>
