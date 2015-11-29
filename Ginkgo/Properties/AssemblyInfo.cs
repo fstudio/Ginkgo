@@ -7,13 +7,13 @@ using System.Windows;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Ginkgo")]
-[assembly: AssemblyDescription("Batch Script Editor")]
+[assembly: AssemblyTitle("Ginkgo Batch Editor")]
+[assembly: AssemblyDescription("Ginkgo Batch Editor")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The Force Studio")]
+[assembly: AssemblyCompany("Force Charlie")]
 [assembly: AssemblyProduct("Ginkgo")]
-[assembly: AssemblyCopyright("Copyright ©  2015 ForceStudio . All Rights Reserved.")]
-[assembly: AssemblyTrademark("ForceStudio")]
+[assembly: AssemblyCopyright("Copyright ©  2015 Force Charlie . All Rights Reserved.")]
+[assembly: AssemblyTrademark("Force Charlie")]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 使此程序集中的类型

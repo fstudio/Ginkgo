@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <SyntaxDefinition name="Batch" extensions=".bat;.cmd;.nt" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 	<Color name="Comment" foreground="#606060" exampleText="REM This Is rem" />
+  <Color name="Expend" foreground="#E74C3C" exampleText="%PATH%"/>
 	<Color name="String" foreground="#F1C40F" exampleText="SET text = &quot;Hello, World!&quot;"/>
 	<Color name="Char" foreground="Magenta" exampleText="char linefeed = '\n';"/>
 	<Color name="Punctuation" exampleText="a(b.c);" />
@@ -15,6 +16,10 @@
 	<Color name="Operators" foreground="#FF8515EA" exampleText="+-"/>
 	
 	<RuleSet ignoreCase="true">
+    <Span color="Expend">
+      <Begin>%</Begin>
+      <End>%|dp\d</End>
+    </Span>
 		<Span color="Comment">
 			<Begin>(?:^|\s)((?i)rem)(?:$|\s.*$) </Begin>
 		</Span>
@@ -110,8 +115,6 @@
 			<Word>try</Word>
       <Word>loadfix</Word>
       <Word>loadhigh</Word>
-      <Word>path</Word>
-      <Word>errorlevel</Word>
       <Word>cmdextversion</Word>
     </Keywords>
 		

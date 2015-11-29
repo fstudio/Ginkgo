@@ -27,7 +27,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
         <Menu Grid.Row="0" FontSize="9pt">
             <MenuItem Header="_File">
                 <MenuItem Header="New">
@@ -74,12 +73,17 @@
                 <MenuItem Header="About Ginkgo" Click="OpenAboutWindow"></MenuItem>
             </MenuItem>
         </Menu>
-        <avalonEdit:TextEditor
-    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-    Name="textEditor"
-    FontFamily="Segoe UI"
-    SyntaxHighlighting="Batch"
-    FontSize="11pt" Grid.Row="1" TextChanged="EditorTextChanged" Margin="7,0,2,0">
+        <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                               Name="textEditor"
+                               FontFamily="Segoe UI"
+                               SyntaxHighlighting="Batch"
+                               FontSize="11pt" 
+                               Grid.Row="1"  
+                               Margin="7,0,2,0" 
+                               ShowLineNumbers="True" 
+                               TextChanged="UpdateTextChanged" 
+                               VerticalScrollBarVisibility="Auto"
+                               HorizontalScrollBarVisibility="Auto">
             <ContextMenuService.ContextMenu>
                 <ContextMenu FontSize="9pt">
                     <MenuItem Header="Cut" Command="Cut" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}"></MenuItem>
@@ -91,7 +95,9 @@
             </ContextMenuService.ContextMenu>
         </avalonEdit:TextEditor>
         <StatusBar Grid.Row="2" Background="WhiteSmoke">
-            <TextBlock Margin="20,0,0,0" Foreground="Black">Batch Script</TextBlock>
+            <TextBlock Margin="20,0,0,0" Foreground="Black" Name="fileTypeName"></TextBlock>
+            <TextBlock Margin="50,0,0,0" Foreground="Black" Name="fileEncoding"></TextBlock>
+            <TextBlock Margin="70,0,0,0" Foreground="Black" Name="filesize"></TextBlock>
         </StatusBar>
     </Grid>
 </controls:MetroWindow >

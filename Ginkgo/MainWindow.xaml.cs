@@ -26,6 +26,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Ginkgo.View;
 using Ginkgo.Modules;
+using System.Text.RegularExpressions;
 
 
 namespace Ginkgo
@@ -48,14 +49,13 @@ namespace Ginkgo
                 title += " - ";
                 title += System.IO.Path.GetFileName(currentFile);
             }
-            if (editorModify)
+            if (this.textEditor.IsModified)
             {
                 title += " *";
             }
             this.Title = title;
         }
-        private bool editorModify;
-        private bool loadFile;
+        //CompletionWindow completionWindow;
         public MainWindow()
         {
             IHighlightingDefinition batchHighlighting;
@@ -73,24 +73,7 @@ namespace Ginkgo
             }
             HighlightingManager.Instance.RegisterHighlighting("Batch", new string[] { ".cmd", ".bat", ".nt" }, batchHighlighting);
             InitializeComponent();
-            ThemeManager.ChangeAppTheme(this, "BaseDark");
-        }
-        private static void WriteFile(String path, String contents)
-        {
-            StreamWriter FileWriter = null;
-            try
-            {
-                FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
-                FileWriter = new StreamWriter(fileStream);
-                FileWriter.Write(contents);
-            }
-            finally
-            {
-                if (FileWriter != null)
-                {
-                    FileWriter.Close();
-                }
-            }
+            //ThemeManager.ChangeAppTheme(this, "BaseDark");
         }
         private bool SaveFile()
         {
@@ -109,8 +92,7 @@ namespace Ginkgo
                     return false;
                 }
             }
-            WriteFile(currentFile, this.textEditor.Text);
-            editorModify = false;
+            this.textEditor.Save(currentFile);
             UpdateTitle();
             return true;
         }
@@ -123,13 +105,23 @@ namespace Ginkgo
             if (result == true)
             {
                 currentFile = dlg.FileName;
-                using (StreamReader reader = File.OpenText(currentFile))
+                this.textEditor.Load(currentFile);
+                Regex reg = new Regex("\\.(bat|cmd|nt)");
+                if (reg.IsMatch(currentFile))
                 {
-                    this.textEditor.Text = reader.ReadToEnd();
-                    editorModify = false;
-                    loadFile = true;
-                    UpdateTitle();
+                    this.fileTypeName.Text = "Batch File";
                 }
+                else
+                {
+                    if (currentFile.LastIndexOf(".") > 0)
+                        this.fileTypeName.Text = currentFile.Substring(currentFile.LastIndexOf(".") + 1).ToUpper();
+                    else
+                        this.fileTypeName.Text = System.IO.Path.GetFileName(currentFile);
+                }
+                
+                this.fileEncoding.Text =this.textEditor.Encoding.HeaderName.ToUpper();
+                this.filesize.Text ="length: "+ this.textEditor.Text.Length.ToString();
+                UpdateTitle();
                 return true;
             }
             return false;
@@ -145,7 +137,7 @@ namespace Ginkgo
         }
         private void OnCloseWindow(object sender, CancelEventArgs e)
         {
-            if (editorModify)
+            if (this.textEditor.IsModified)
             {
                 var v = MessageBox.Show("Do you want to save this file ?",
                     "Batch File is modify !",
@@ -191,7 +183,7 @@ namespace Ginkgo
         }
         private void MenuOpenEventMethod(object sender, RoutedEventArgs e)
         {
-            if (currentFile != null && editorModify)
+            if (currentFile != null && this.textEditor.IsModified)
             {
                 BatchFileIsModifyShow(sender, e);
                 return;
@@ -211,9 +203,8 @@ namespace Ginkgo
             Nullable<bool> result = dlg.ShowDialog();
             if (result == true)
             {
-                WriteFile(dlg.FileName, this.textEditor.Text);
+                this.textEditor.Save(dlg.FileName);
                 currentFile = dlg.FileName;
-                editorModify = false;
                 UpdateTitle();
             }
             else
@@ -223,7 +214,7 @@ namespace Ginkgo
         }
         private void MenuCloseEventMethod(object sender, RoutedEventArgs e)
         {
-            if (editorModify)
+            if (this.textEditor.IsModified)
             {
                 MenuSaveEventMethod(sender, e);
             }
@@ -238,24 +229,11 @@ namespace Ginkgo
                 System.Diagnostics.Process.Start("Explorer.exe", dir);
         }
 
-        private void EditorTextChanged(object sender, EventArgs e)
-        {
-            if (loadFile)
-            {
-                loadFile = false;
-                return;
-            }
-            if (!editorModify)
-            {
-                editorModify = true;
-                UpdateTitle();
-            }
-        }
         private async void BatchFileRunAsyn(bool isKeep)
         {
             if (textEditor.Text.Length == 0)
                 return;
-            if (currentFile == null || editorModify)
+            if (currentFile == null || this.textEditor.IsModified)
             {
                 var mySettings = new MetroDialogSettings()
                 {
@@ -306,6 +284,11 @@ namespace Ginkgo
         private void MenuGithubViewEventMethod(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/fstudio/Ginkgo");
+        }
+
+        private void UpdateTextChanged(object sender, EventArgs e)
+        {
+            UpdateTitle();
         }
 
 

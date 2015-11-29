@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Ginkgo.Presenter
 {
-    class WindowsShellScriptRun
+    class WindowsBatchFileDebugger
     {
-        static int RunManager(String[] Args)
+        private String batchFile_;
+        public WindowsBatchFileDebugger(String batchFile)
         {
-            return 0;
+            this.batchFile_ = batchFile;
         }
     }
 }
