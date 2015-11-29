@@ -251,5 +251,63 @@ namespace Ginkgo
                 UpdateTitle();
             }
         }
+        private async void BatchFileRunAsyn(bool isKeep)
+        {
+            if (textEditor.Text.Length == 0)
+                return;
+            if (currentFile == null || editorModify)
+            {
+                var mySettings = new MetroDialogSettings()
+                {
+                    AffirmativeButtonText = "Save and Run",
+                    NegativeButtonText = "Run Older",
+                    FirstAuxiliaryButtonText = "Cancel",
+                    ColorScheme = MetroDialogOptions.ColorScheme
+                };
+                MessageDialogResult result = await this.ShowMessageAsync("Batch File is modify",
+                    "Please select your run mode",
+                    MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary, mySettings);
+                switch (result)
+                {
+                    case MessageDialogResult.Affirmative:
+                        SaveFile();
+                        break;
+                    case MessageDialogResult.Negative:
+                        break;
+                    case MessageDialogResult.FirstAuxiliary:
+                        return;
+                    default:
+                        break;
+                }
+            }
+            if (isKeep)
+            {
+                System.Diagnostics.Process.Start("cmd.exe", "/k " + currentFile);
+            }
+            else
+            {
+                System.Diagnostics.Process.Start("cmd.exe", "/c " + currentFile);
+            }
+           
+        }
+        private void MenuRunEventMethod(object sender, RoutedEventArgs e)
+        {
+            BatchFileRunAsyn(true);
+        }
+        private void MenuRunStopEventMethod(object sender, RoutedEventArgs e)
+        {
+            BatchFileRunAsyn(false);
+        }
+        private void MenuDebuggerEventMethod(object sender, RoutedEventArgs e)
+        {
+            ////
+        }
+
+        private void MenuGithubViewEventMethod(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/fstudio/Ginkgo");
+        }
+
+
     }
 }

@@ -61,18 +61,16 @@
                 <MenuItem Header="Replace" Command="Replace"></MenuItem>
                 <MenuItem Header="Replace All"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Setting">
+            <MenuItem Header="_Setting">
                 <MenuItem Header="Properties" Click="OpenPropertiesSettingWindow"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Run">
-                <MenuItem Header="Debugger"></MenuItem>
-                <MenuItem Header="Run"></MenuItem>
-                <MenuItem Header="Param"></MenuItem>
+                <MenuItem Header="Debugger" Click="MenuDebuggerEventMethod"></MenuItem>
+                <MenuItem Header="Run (stop)" Click="MenuRunStopEventMethod"></MenuItem>
+                <MenuItem Header="Run (continues)" Click="MenuRunEventMethod"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="View Help"></MenuItem>
-                <MenuItem Header="Report Bug"></MenuItem>
-                <MenuItem Header="Visit Offical Site"></MenuItem>
+                <MenuItem Header="Github Page" Click="MenuGithubViewEventMethod" ></MenuItem>
                 <MenuItem Header="About Ginkgo" Click="OpenAboutWindow"></MenuItem>
             </MenuItem>
         </Menu>
