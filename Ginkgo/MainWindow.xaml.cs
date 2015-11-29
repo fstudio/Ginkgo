@@ -205,6 +205,18 @@ namespace Ginkgo
             {
                 this.textEditor.Save(dlg.FileName);
                 currentFile = dlg.FileName;
+                Regex reg = new Regex("\\.(bat|cmd|nt)");
+                if (reg.IsMatch(currentFile))
+                {
+                    this.fileTypeName.Text = "Batch File";
+                }
+                else
+                {
+                    if (currentFile.LastIndexOf(".") > 0)
+                        this.fileTypeName.Text = currentFile.Substring(currentFile.LastIndexOf(".") + 1).ToUpper();
+                    else
+                        this.fileTypeName.Text = System.IO.Path.GetFileName(currentFile);
+                }
                 UpdateTitle();
             }
             else
