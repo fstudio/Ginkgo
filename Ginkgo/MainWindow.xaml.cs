@@ -114,6 +114,26 @@ namespace Ginkgo
             UpdateTitle();
             return true;
         }
+        private bool OpenFile()
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".bat"; // Default file extension
+            dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|All Files(*.*)|*.*"; // Filter files by extension
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                currentFile = dlg.FileName;
+                using (StreamReader reader = File.OpenText(currentFile))
+                {
+                    this.textEditor.Text = reader.ReadToEnd();
+                    editorModify = false;
+                    loadFile = true;
+                    UpdateTitle();
+                }
+                return true;
+            }
+            return false;
+        }
         private void OpenAboutWindow(object sender, RoutedEventArgs e)
         {
             View.AboutWindow about = new View.AboutWindow();
@@ -157,11 +177,11 @@ namespace Ginkgo
             switch (result)
             {
                 case MessageDialogResult.Affirmative:
-                   SaveFile();;
-                    MenuOpenEventMethod(sender, e);
+                    SaveFile();
+                    OpenFile();
                     break;
                 case MessageDialogResult.Negative:
-                    MenuOpenEventMethod(sender, e);
+                    OpenFile();
                     break;
                 case MessageDialogResult.FirstAuxiliary:
                     return;
@@ -176,34 +196,11 @@ namespace Ginkgo
                 BatchFileIsModifyShow(sender, e);
                 return;
             }
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".bat"; // Default file extension
-            dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|All Files(*.*)|*.*"; // Filter files by extension
-            Nullable<bool> result = dlg.ShowDialog();
-            if (result == true)
-            {
-                currentFile = dlg.FileName;
-                using (StreamReader reader = File.OpenText(currentFile))
-                {
-                    this.textEditor.Text = reader.ReadToEnd();
-                    editorModify = false;
-                    loadFile = true;
-                    UpdateTitle();
-                }
-
-            }
-
+            OpenFile();
         }
         private void MenuSaveEventMethod(object sender, RoutedEventArgs e)
         {
-            if (SaveFile())
-            {
-                /// This success
-            }
-            else
-            {
-
-            }
+            SaveFile();
         }
 
         private void MenuSaveAsEventMethod(object sender, RoutedEventArgs e)
