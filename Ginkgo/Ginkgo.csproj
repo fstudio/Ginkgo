@@ -92,6 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GinkgoCompletionData.cs" />
     <Compile Include="Modules\FileSystemModule.cs" />
     <Compile Include="Presenter\WindowsBatchFileDebugger.cs" />
     <Compile Include="View\AboutWindow.xaml.cs">

@@ -95,9 +95,11 @@
             </ContextMenuService.ContextMenu>
         </avalonEdit:TextEditor>
         <StatusBar Grid.Row="2" Background="WhiteSmoke">
-            <TextBlock Margin="20,0,0,0" Foreground="Black" Name="fileTypeName"></TextBlock>
+            <TextBlock Margin="20,0,0,0" Foreground="Black" Name="fileLanguage"></TextBlock>
             <TextBlock Margin="50,0,0,0" Foreground="Black" Name="fileEncoding"></TextBlock>
-            <TextBlock Margin="70,0,0,0" Foreground="Black" Name="filesize"></TextBlock>
+            <TextBlock Margin="70,0,0,0" Foreground="Black" Name="fileSize"></TextBlock>
+            <TextBlock Margin="90,0,0,0" Foreground="Black" Name="lineCounts"></TextBlock>
+            <TextBlock Margin="110,0,0,0" Foreground="Black" Name="filenewline"></TextBlock>
         </StatusBar>
     </Grid>
 </controls:MetroWindow >

@@ -55,7 +55,7 @@ namespace Ginkgo
             }
             this.Title = title;
         }
-        //CompletionWindow completionWindow;
+        CompletionWindow completionWindow;
         public MainWindow()
         {
             IHighlightingDefinition batchHighlighting;
@@ -73,7 +73,50 @@ namespace Ginkgo
             }
             HighlightingManager.Instance.RegisterHighlighting("Batch", new string[] { ".cmd", ".bat", ".nt" }, batchHighlighting);
             InitializeComponent();
+            this.textEditor.Document.PropertyChanged += LineCuntChangedActive;
+            this.textEditor.TextArea.TextEntering += GinkgoTextEntering;
+            this.textEditor.TextArea.TextEntered += GinkgoTextEntered;
+            this.lineCounts.DataContext = this.textEditor.LineCount.ToString();
             //ThemeManager.ChangeAppTheme(this, "BaseDark");
+        }
+
+        private void GinkgoTextEntered(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text == ".")
+            {
+                // open code completion after the user has pressed dot:
+                completionWindow = new CompletionWindow(textEditor.TextArea);
+                // provide AvalonEdit with the data:
+                IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
+                data.Add(new GinkgoCompletionData("Item1"));
+                data.Add(new GinkgoCompletionData("Item2"));
+                data.Add(new GinkgoCompletionData("Item3"));
+                data.Add(new GinkgoCompletionData("Another item"));
+                completionWindow.Show();
+                completionWindow.Closed += delegate
+                {
+                    completionWindow = null;
+                };
+            }
+        }
+
+        private void GinkgoTextEntering(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text.Length > 0 && completionWindow != null)
+            {
+                if (!char.IsLetterOrDigit(e.Text[0]))
+                {
+                    // Whenever a non-letter is typed while the completion window is open,
+                    // insert the currently selected element.
+                    completionWindow.CompletionList.RequestInsertion(e);
+                }
+            }
+        }
+
+        private void LineCuntChangedActive(object sender, EventArgs e)
+        {
+            this.lineCounts.Text = "Lines: " + this.textEditor.LineCount.ToString();
+            this.fileSize.Text = "Length: " + this.textEditor.Document.TextLength.ToString();
         }
         private bool SaveFile()
         {
@@ -106,21 +149,10 @@ namespace Ginkgo
             {
                 currentFile = dlg.FileName;
                 this.textEditor.Load(currentFile);
-                Regex reg = new Regex("\\.(bat|cmd|nt)");
-                if (reg.IsMatch(currentFile))
-                {
-                    this.fileTypeName.Text = "Batch File";
-                }
-                else
-                {
-                    if (currentFile.LastIndexOf(".") > 0)
-                        this.fileTypeName.Text = currentFile.Substring(currentFile.LastIndexOf(".") + 1).ToUpper();
-                    else
-                        this.fileTypeName.Text = System.IO.Path.GetFileName(currentFile);
-                }
-                
+                this.textEditor.SyntaxHighlighting= HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(currentFile));
+                this.fileLanguage.Text=this.textEditor.SyntaxHighlighting.Name;
                 this.fileEncoding.Text =this.textEditor.Encoding.HeaderName.ToUpper();
-                this.filesize.Text ="length: "+ this.textEditor.Text.Length.ToString();
+                this.fileSize.Text ="Length: "+ this.textEditor.Text.Length.ToString();
                 UpdateTitle();
                 return true;
             }
@@ -208,14 +240,15 @@ namespace Ginkgo
                 Regex reg = new Regex("\\.(bat|cmd|nt)");
                 if (reg.IsMatch(currentFile))
                 {
-                    this.fileTypeName.Text = "Batch File";
+                    this.fileLanguage.Text = "Batch File";
                 }
                 else
                 {
-                    if (currentFile.LastIndexOf(".") > 0)
-                        this.fileTypeName.Text = currentFile.Substring(currentFile.LastIndexOf(".") + 1).ToUpper();
+                    var filename = System.IO.Path.GetFileName(currentFile);
+                    if (filename.LastIndexOf(".") > 0)
+                        this.fileLanguage.Text = filename.Substring(filename.LastIndexOf(".") + 1).ToUpper()+" File";
                     else
-                        this.fileTypeName.Text = System.IO.Path.GetFileName(currentFile);
+                        this.fileLanguage.Text = filename;
                 }
                 UpdateTitle();
             }
@@ -231,7 +264,11 @@ namespace Ginkgo
                 MenuSaveEventMethod(sender, e);
             }
             currentFile = null;
-            this.textEditor.Text = "";
+            this.textEditor.Clear();
+            this.textEditor.IsModified = false;
+            this.fileLanguage.Text = "";
+            this.fileEncoding.Text= "";
+            this.fileSize.Text = "";
             UpdateTitle();
         }
         private void OpenCurrentFolder(object sender, RoutedEventArgs e)
