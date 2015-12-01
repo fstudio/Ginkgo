@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
-<SyntaxDefinition name="Batch" extensions=".bat;.cmd;.nt" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-	<Color name="Comment" foreground="#606060" exampleText="REM This Is rem" />
-  <Color name="Expend" foreground="#E74C3C" exampleText="%PATH%"/>
-	<Color name="String" foreground="#F1C40F" exampleText="SET text = &quot;Hello, World!&quot;"/>
+<SyntaxDefinition name="Batch" extensions=".bat;.cmd;.nt;.btm" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Green" exampleText="REM This Is rem" />
+  <Color name="Expend" foreground="Purple" exampleText="%PATH%"/>
+	<Color name="String" foreground="Blue" exampleText="SET text = &quot;Hello, World!&quot;"/>
 	<Color name="Char" foreground="Magenta" exampleText="char linefeed = '\n';"/>
 	<Color name="Punctuation" exampleText="a(b.c);" />
 	<Color name="NumberLiteral" foreground="DarkBlue" exampleText="3.1415f"/>
-	<Color name="Keywords" fontWeight="bold" foreground="#E74C3C" exampleText="if (a)"/>
-	<Color name="Variable" foreground="#E67E22" exampleText="$param = 1" />
+	<Color name="Keywords" fontWeight="bold" foreground="Navy" exampleText="if (a)"/>
+	<Color name="Variable" foreground="Maroon" exampleText="SET VAR= 1" />
 	<Color name="ExceptionKeywords" fontWeight="bold" foreground="Teal" />
-  <Color name="JumpKeywords" foreground="#FF000080" />
-  <Color name="BatchLab" foreground="#EE7600" />
+  <Color name="JumpKeywords" foreground="Navy" />
+  <Color name="BatchLab" foreground="Maroon" />
 	<Color name="ReferenceTypes" foreground="Red" />
-	<Color name="Command" fontWeight="bold" foreground="MidnightBlue" />
-	<Color name="Operators" foreground="#FF8515EA" exampleText="+-"/>
+	<Color name="Command" fontWeight="bold" foreground="Indigo" />
+	<Color name="Operators" foreground="Pink" exampleText="+-"/>
 	
 	<RuleSet ignoreCase="true">
     <Span color="Expend">
