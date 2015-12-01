@@ -36,10 +36,40 @@ namespace Ginkgo
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private String currentFile
+        public MainWindow()
         {
-            get;
-            set;
+            InitializeComponent();
+            IHighlightingDefinition batchHighlighting;
+            using (var s = Assembly.GetEntryAssembly().GetManifestResourceStream("Ginkgo.Syntax.Batch.xshd"))
+            {
+                if (s == null)
+                {
+                    throw new InvalidOperationException("Could not find embedded resource");
+                }
+                using (XmlReader reader = new XmlTextReader(s))
+                {
+                    batchHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.
+                    HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                }
+            }
+            HighlightingManager.Instance.RegisterHighlighting("Batch", new string[] { ".cmd", ".bat", ".nt", ".btm" }, batchHighlighting);
+            var Args = Environment.GetCommandLineArgs();
+            if (Args.Length > 1)
+            {
+                currentFile = Args[1];
+                TextEditorLoadFile();
+            }
+            this.textEditor.Document.PropertyChanged += GinkgoDocumentPropertyChanged;
+            this.textEditor.TextArea.TextEntering += GinkgoTextEntering;
+            this.textEditor.TextArea.TextEntered += GinkgoTextEntered;
+            //ThemeManager.ChangeAppTheme(this, "BaseDark");
+        }
+        private String currentFile;
+
+        public String CurrentFile
+        {
+            get { return currentFile; }
+            set { currentFile = value; }
         }
         private void UpdateTitle()
         {
@@ -56,30 +86,6 @@ namespace Ginkgo
             this.Title = title;
         }
         CompletionWindow completionWindow;
-        public MainWindow()
-        {
-            IHighlightingDefinition batchHighlighting;
-            using (var s = Assembly.GetEntryAssembly().GetManifestResourceStream("Ginkgo.Syntax.Batch.xshd"))
-            {
-                if (s == null)
-                {
-                    throw new InvalidOperationException("Could not find embedded resource");
-                }
-                using (XmlReader reader = new XmlTextReader(s))
-                {
-                    batchHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.
-                    HighlightingLoader.Load(reader, HighlightingManager.Instance);
-                }
-            }
-            HighlightingManager.Instance.RegisterHighlighting("Batch", new string[] { ".cmd", ".bat", ".nt" }, batchHighlighting);
-            InitializeComponent();
-            this.textEditor.Document.PropertyChanged += LineCuntChangedActive;
-            this.textEditor.TextArea.TextEntering += GinkgoTextEntering;
-            this.textEditor.TextArea.TextEntered += GinkgoTextEntered;
-            this.lineCounts.DataContext = this.textEditor.LineCount.ToString();
-            //ThemeManager.ChangeAppTheme(this, "BaseDark");
-        }
-
         private void GinkgoTextEntered(object sender, TextCompositionEventArgs e)
         {
             if (e.Text == ".")
@@ -113,10 +119,13 @@ namespace Ginkgo
             }
         }
 
-        private void LineCuntChangedActive(object sender, EventArgs e)
+        private void GinkgoDocumentPropertyChanged(object sender, EventArgs e)
         {
             this.lineCounts.Text = "Lines: " + this.textEditor.LineCount.ToString();
             this.fileSize.Text = "Length: " + this.textEditor.Document.TextLength.ToString();
+            //this.textEditor.IsModified = this.textEditor.Document.UndoStack.IsOriginalFile;
+            UpdateTitle();
+            //UpdateTitle();
         }
         private bool SaveFile()
         {
@@ -139,7 +148,16 @@ namespace Ginkgo
             UpdateTitle();
             return true;
         }
-        private bool OpenFile()
+        private void TextEditorLoadFile()
+        {
+            this.textEditor.Load(currentFile);
+            this.textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(currentFile));
+            this.fileLanguage.Text = this.textEditor.SyntaxHighlighting.Name;
+            this.fileEncoding.Text = this.textEditor.Encoding.HeaderName.ToUpper();
+            this.fileSize.Text = "Length: " + this.textEditor.Text.Length.ToString();
+            UpdateTitle();
+        }
+        private bool OpenFileWithWindow()
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".bat"; // Default file extension
@@ -149,10 +167,10 @@ namespace Ginkgo
             {
                 currentFile = dlg.FileName;
                 this.textEditor.Load(currentFile);
-                this.textEditor.SyntaxHighlighting= HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(currentFile));
-                this.fileLanguage.Text=this.textEditor.SyntaxHighlighting.Name;
-                this.fileEncoding.Text =this.textEditor.Encoding.HeaderName.ToUpper();
-                this.fileSize.Text ="Length: "+ this.textEditor.Text.Length.ToString();
+                this.textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(currentFile));
+                this.fileLanguage.Text = this.textEditor.SyntaxHighlighting.Name;
+                this.fileEncoding.Text = this.textEditor.Encoding.HeaderName.ToUpper();
+                this.fileSize.Text = "Length: " + this.textEditor.Text.Length.ToString();
                 UpdateTitle();
                 return true;
             }
@@ -202,10 +220,10 @@ namespace Ginkgo
             {
                 case MessageDialogResult.Affirmative:
                     SaveFile();
-                    OpenFile();
+                    OpenFileWithWindow();
                     break;
                 case MessageDialogResult.Negative:
-                    OpenFile();
+                    OpenFileWithWindow();
                     break;
                 case MessageDialogResult.FirstAuxiliary:
                     return;
@@ -220,7 +238,7 @@ namespace Ginkgo
                 BatchFileIsModifyShow(sender, e);
                 return;
             }
-            OpenFile();
+            OpenFileWithWindow();
         }
         private void MenuSaveEventMethod(object sender, RoutedEventArgs e)
         {
@@ -246,7 +264,7 @@ namespace Ginkgo
                 {
                     var filename = System.IO.Path.GetFileName(currentFile);
                     if (filename.LastIndexOf(".") > 0)
-                        this.fileLanguage.Text = filename.Substring(filename.LastIndexOf(".") + 1).ToUpper()+" File";
+                        this.fileLanguage.Text = filename.Substring(filename.LastIndexOf(".") + 1).ToUpper() + " File";
                     else
                         this.fileLanguage.Text = filename;
                 }
@@ -267,7 +285,7 @@ namespace Ginkgo
             this.textEditor.Clear();
             this.textEditor.IsModified = false;
             this.fileLanguage.Text = "";
-            this.fileEncoding.Text= "";
+            this.fileEncoding.Text = "";
             this.fileSize.Text = "";
             UpdateTitle();
         }
@@ -315,7 +333,7 @@ namespace Ginkgo
             {
                 System.Diagnostics.Process.Start("cmd.exe", "/c " + currentFile);
             }
-           
+
         }
         private void MenuRunEventMethod(object sender, RoutedEventArgs e)
         {

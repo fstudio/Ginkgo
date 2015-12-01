@@ -2,7 +2,7 @@
 <SyntaxDefinition name="Batch" extensions=".bat;.cmd;.nt;.btm" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   <Color name="Comment" foreground="Green" exampleText="REM This Is rem" />
   <Color name="Expend" foreground="Purple" exampleText="%PATH%"/>
-	<Color name="String" foreground="Blue" exampleText="SET text = &quot;Hello, World!&quot;"/>
+	<Color name="String" foreground="Red" exampleText="SET text = &quot;Hello, World!&quot;"/>
 	<Color name="Char" foreground="Magenta" exampleText="char linefeed = '\n';"/>
 	<Color name="Punctuation" exampleText="a(b.c);" />
 	<Color name="NumberLiteral" foreground="DarkBlue" exampleText="3.1415f"/>
@@ -13,7 +13,7 @@
   <Color name="BatchLab" foreground="Maroon" />
 	<Color name="ReferenceTypes" foreground="Red" />
 	<Color name="Command" fontWeight="bold" foreground="Indigo" />
-	<Color name="Operators" foreground="Pink" exampleText="+-"/>
+	<Color name="Operators" foreground="Black" exampleText="+-"/>
 	
 	<RuleSet ignoreCase="true">
     <Span color="Expend">
