@@ -70,7 +70,7 @@
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="Github Page" Click="MenuGithubViewEventMethod" ></MenuItem>
-                <MenuItem Header="About Ginkgo" Click="OpenAboutWindow"></MenuItem>
+                <MenuItem Header="About Ginkgo" Click="ShowAbout"></MenuItem>
             </MenuItem>
         </Menu>
         <avalonEdit:TextEditor xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"

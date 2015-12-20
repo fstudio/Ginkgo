@@ -93,8 +93,9 @@ namespace Ginkgo
                 // open code completion after the user has pressed dot:
                 completionWindow = new CompletionWindow(textEditor.TextArea);
                 // provide AvalonEdit with the data:
+
                 IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
-                data.Add(new GinkgoCompletionData("Item1"));
+                data.Add(new GinkgoCompletionData("set"));
                 data.Add(new GinkgoCompletionData("Item2"));
                 data.Add(new GinkgoCompletionData("Item3"));
                 data.Add(new GinkgoCompletionData("Another item"));
@@ -176,10 +177,13 @@ namespace Ginkgo
             }
             return false;
         }
-        private void OpenAboutWindow(object sender, RoutedEventArgs e)
+        private void ShowAbout(object sender, RoutedEventArgs e)
         {
-            View.AboutWindow about = new View.AboutWindow();
-            about.ShowDialog();
+           this.ShowMessageAsync("About Ginkgo",
+                "Copyrigth \xA9 2015, Force Charlie. All Rights Reserved.",
+                MessageDialogStyle.Affirmative);
+            //View.AboutWindow about = new View.AboutWindow();
+            //about.ShowDialog();
         }
         private void OnExitApp(object sender, RoutedEventArgs e)
         {
