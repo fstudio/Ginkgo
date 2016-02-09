@@ -180,7 +180,7 @@ namespace Ginkgo
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
            this.ShowMessageAsync("About Ginkgo",
-                "Copyrigth \xA9 2015, Force Charlie. All Rights Reserved.",
+                "Copyrigth \xA9 2016, Force Charlie. All Rights Reserved.",
                 MessageDialogStyle.Affirmative);
             //View.AboutWindow about = new View.AboutWindow();
             //about.ShowDialog();

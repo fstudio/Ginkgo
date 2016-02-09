@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Force Charlie")]
 [assembly: AssemblyProduct("Ginkgo")]
-[assembly: AssemblyCopyright("Copyright ©  2015 Force Charlie . All Rights Reserved.")]
+[assembly: AssemblyCopyright("Copyright \xa9  2016 Force Charlie . All Rights Reserved.")]
 [assembly: AssemblyTrademark("Force Charlie")]
 [assembly: AssemblyCulture("")]
 
