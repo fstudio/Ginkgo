@@ -163,7 +163,7 @@ namespace Ginkgo
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".bat"; // Default file extension
             dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|All Files(*.*)|*.*"; // Filter files by extension
-            Nullable<bool> result = dlg.ShowDialog();
+            var result = dlg.ShowDialog();
             if (result == true)
             {
                 currentFile = dlg.FileName;
@@ -254,7 +254,7 @@ namespace Ginkgo
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".bat";
             dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*";
-            Nullable<bool> result = dlg.ShowDialog();
+            var result = dlg.ShowDialog();
             if (result == true)
             {
                 this.textEditor.Save(dlg.FileName);
