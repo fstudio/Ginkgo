@@ -361,7 +361,5 @@ namespace Ginkgo
         {
             UpdateTitle();
         }
-
-
     }
 }
