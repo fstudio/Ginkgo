@@ -27,10 +27,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" FontSize="9pt">
+        <Menu Grid.Row="0" FontSize="10pt">
             <MenuItem Header="_File">
-                <MenuItem Header="New">
-                </MenuItem>
+                <MenuItem Header="New" Click="MenuNewFileEventMethod"></MenuItem>
                 <MenuItem Header="Open" Click="MenuOpenEventMethod"></MenuItem>
                 <MenuItem Header="Sava" Click="MenuSaveEventMethod"></MenuItem>
                 <MenuItem Header="Sava As" Click="MenuSaveAsEventMethod"></MenuItem>
@@ -53,6 +52,9 @@
                 <MenuItem Header="Delete" Command="Delete"
                           ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" ToolTipService.ShowOnDisabled="True">
                 </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="Console View" IsCheckable="True" IsChecked="False" Name="ConsoleMenuView" Checked="OnConsoleViewCheckChanged"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Search">
                 <MenuItem Header="Find" Command="Find"></MenuItem>

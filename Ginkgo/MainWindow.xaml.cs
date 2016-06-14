@@ -361,5 +361,20 @@ namespace Ginkgo
         {
             UpdateTitle();
         }
+
+        private void MenuNewFileEventMethod(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void OnConsoleViewCheckChanged(object sender, RoutedEventArgs e)
+        {
+            if (ConsoleMenuView.IsChecked) {
+            }
+            else
+            {
+
+            }
+           
+        }
     }
 }
