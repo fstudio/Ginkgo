@@ -9,12 +9,17 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonEdit"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:zone="clr-namespace:Ginkgo.View"
         EnableDWMDropShadow="True"
+        Title="Ginkgo Batch Editor"
         WindowTransitionsEnabled="False"
-        BorderBrush="{DynamicResource AccentColorBrush}"
-        BorderThickness="1"
-        Title="Ginkgo Batch Editor" TitleCaps="False" Height="500" Width="800" Closing="OnCloseWindow" FontFamily="Segoe UI">
+        WindowTitleBrush="DimGray"
+        TitleCaps="False" Height="500" Width="800" 
+        Closing="OnCloseWindow" FontFamily="Segoe UI">
+    <controls:MetroWindow.WindowButtonCommands>
+        <controls:WindowButtonCommands Style="{DynamicResource MahApps.Metro.Styles.WindowButtonCommands.Win10}" />
+    </controls:MetroWindow.WindowButtonCommands>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskBar" 
                          Overlay="Ginkgo.ico"
