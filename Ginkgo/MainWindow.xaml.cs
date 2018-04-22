@@ -1,31 +1,14 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.ComponentModel;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MahApps.Metro;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Win32;
 using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using Ginkgo.View;
-using Ginkgo.Modules;
 using System.Text.RegularExpressions;
 
 
@@ -132,9 +115,11 @@ namespace Ginkgo
         {
             if (currentFile == null)
             {
-                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-                dlg.DefaultExt = ".bat";
-                dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*";
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+                {
+                    DefaultExt = ".bat",
+                    Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*"
+                };
                 Nullable<bool> result = dlg.ShowDialog();
                 if (result == true)
                 {
@@ -179,9 +164,9 @@ namespace Ginkgo
         }
         private void ShowAbout(object sender, RoutedEventArgs e)
         {
-           this.ShowMessageAsync("About Ginkgo",
-                "Copyrigth \xA9 2016, Force Charlie. All Rights Reserved.",
-                MessageDialogStyle.Affirmative);
+            this.ShowMessageAsync("About Ginkgo",
+                 "Copyrigth \xA9 2018, Force Charlie. All Rights Reserved.",
+                 MessageDialogStyle.Affirmative);
             //View.AboutWindow about = new View.AboutWindow();
             //about.ShowDialog();
         }
@@ -368,13 +353,14 @@ namespace Ginkgo
 
         private void OnConsoleViewCheckChanged(object sender, RoutedEventArgs e)
         {
-            if (ConsoleMenuView.IsChecked) {
+            if (ConsoleMenuView.IsChecked)
+            {
             }
             else
             {
 
             }
-           
+
         }
     }
 }
