@@ -145,9 +145,11 @@ namespace Ginkgo
         }
         private bool OpenFileWithWindow()
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".bat"; // Default file extension
-            dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|All Files(*.*)|*.*"; // Filter files by extension
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".bat", // Default file extension
+                Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|All Files(*.*)|*.*" // Filter files by extension
+            };
             var result = dlg.ShowDialog();
             if (result == true)
             {
@@ -236,9 +238,11 @@ namespace Ginkgo
 
         private void MenuSaveAsEventMethod(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.DefaultExt = ".bat";
-            dlg.Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*";
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                DefaultExt = ".bat",
+                Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*"
+            };
             var result = dlg.ShowDialog();
             if (result == true)
             {
