@@ -10,7 +10,8 @@ using MahApps.Metro.Controls.Dialogs;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Highlighting;
 using System.Text.RegularExpressions;
-
+using System.Threading.Tasks;
+using System.IO;
 
 namespace Ginkgo
 {
@@ -19,6 +20,8 @@ namespace Ginkgo
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private static readonly string Prefix = "Ginkgo Batch Editor ";
+        CompletionWindow completionWindow;
         public MainWindow()
         {
             InitializeComponent();
@@ -39,36 +42,30 @@ namespace Ginkgo
             var Args = Environment.GetCommandLineArgs();
             if (Args.Length > 1)
             {
-                currentFile = Args[1];
+                CurrentFile = Args[1];
                 TextEditorLoadFile();
             }
-            this.textEditor.Document.PropertyChanged += GinkgoDocumentPropertyChanged;
-            this.textEditor.TextArea.TextEntering += GinkgoTextEntering;
-            this.textEditor.TextArea.TextEntered += GinkgoTextEntered;
+            textEditor.Document.PropertyChanged += GinkgoDocumentPropertyChanged;
+            textEditor.TextArea.TextEntering += GinkgoTextEntering;
+            textEditor.TextArea.TextEntered += GinkgoTextEntered;
             //ThemeManager.ChangeAppTheme(this, "BaseDark");
         }
-        private String currentFile;
 
-        public String CurrentFile
-        {
-            get { return currentFile; }
-            set { currentFile = value; }
-        }
+        public String CurrentFile { get; set; }
         private void UpdateTitle()
         {
-            String title = "Ginkgo Batch Editor ";
-            if (currentFile != null)
+            if (CurrentFile != null)
             {
-                title += " - ";
-                title += System.IO.Path.GetFileName(currentFile);
+                if (textEditor.IsModified)
+                {
+                    Title = Prefix + " - " + Path.GetFileName(CurrentFile) + " *";
+                    return;
+                }
+                Title = Prefix + " - " + Path.GetFileName(CurrentFile);
+                return;
             }
-            if (this.textEditor.IsModified)
-            {
-                title += " *";
-            }
-            this.Title = title;
         }
-        CompletionWindow completionWindow;
+
         private void GinkgoTextEntered(object sender, TextCompositionEventArgs e)
         {
             if (e.Text == ".")
@@ -105,42 +102,38 @@ namespace Ginkgo
 
         private void GinkgoDocumentPropertyChanged(object sender, EventArgs e)
         {
-            this.lineCounts.Text = "Lines: " + this.textEditor.LineCount.ToString();
-            this.fileSize.Text = "Length: " + this.textEditor.Document.TextLength.ToString();
-            //this.textEditor.IsModified = this.textEditor.Document.UndoStack.IsOriginalFile;
+            lineCounts.Text = "Lines: " + textEditor.LineCount.ToString();
+            fileSize.Text = "Length: " + textEditor.Document.TextLength.ToString();
+            //textEditor.IsModified = textEditor.Document.UndoStack.IsOriginalFile;
             UpdateTitle();
             //UpdateTitle();
         }
         private bool SaveFile()
         {
-            if (currentFile == null)
+            if (CurrentFile == null)
             {
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
                 {
                     DefaultExt = ".bat",
-                    Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*"
+                    Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other Files|*.*"
                 };
-                Nullable<bool> result = dlg.ShowDialog();
-                if (result == true)
-                {
-                    currentFile = dlg.FileName;
-                }
-                else
+                if (dlg.ShowDialog() != true)
                 {
                     return false;
                 }
+                CurrentFile = dlg.FileName;
             }
-            this.textEditor.Save(currentFile);
+            textEditor.Save(CurrentFile);
             UpdateTitle();
             return true;
         }
         private void TextEditorLoadFile()
         {
-            this.textEditor.Load(currentFile);
-            this.textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(currentFile));
-            this.fileLanguage.Text = this.textEditor.SyntaxHighlighting.Name;
-            this.fileEncoding.Text = this.textEditor.Encoding.HeaderName.ToUpper();
-            this.fileSize.Text = "Length: " + this.textEditor.Text.Length.ToString();
+            textEditor.Load(CurrentFile);
+            textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(CurrentFile));
+            fileLanguage.Text = textEditor.SyntaxHighlighting.Name;
+            fileEncoding.Text = textEditor.Encoding.HeaderName.ToUpper();
+            fileSize.Text = "Length: " + textEditor.Text.Length.ToString();
             UpdateTitle();
         }
         private bool OpenFileWithWindow()
@@ -153,49 +146,33 @@ namespace Ginkgo
             var result = dlg.ShowDialog();
             if (result == true)
             {
-                currentFile = dlg.FileName;
-                this.textEditor.Load(currentFile);
-                this.textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(currentFile));
-                this.fileLanguage.Text = this.textEditor.SyntaxHighlighting.Name;
-                this.fileEncoding.Text = this.textEditor.Encoding.HeaderName.ToUpper();
-                this.fileSize.Text = "Length: " + this.textEditor.Text.Length.ToString();
+                CurrentFile = dlg.FileName;
+                textEditor.Load(CurrentFile);
+                textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinitionByExtension(System.IO.Path.GetExtension(CurrentFile));
+                fileLanguage.Text = textEditor.SyntaxHighlighting.Name;
+                fileEncoding.Text = textEditor.Encoding.HeaderName.ToUpper();
+                fileSize.Text = "Length: " + textEditor.Text.Length.ToString();
                 UpdateTitle();
                 return true;
             }
             return false;
         }
-        private void ShowAbout(object sender, RoutedEventArgs e)
+        private async void ShowAbout(object sender, RoutedEventArgs e)
         {
-            this.ShowMessageAsync("About Ginkgo",
-                 "Copyrigth \xA9 2018, Force Charlie. All Rights Reserved.",
-                 MessageDialogStyle.Affirmative);
-            //View.AboutWindow about = new View.AboutWindow();
-            //about.ShowDialog();
+            await this.ShowMessageAsync("About Ginkgo", string.Format("Copyrigth \xA9 {0}, Force Charlie. All Rights Reserved.", DateTime.Now.Year), MessageDialogStyle.Affirmative);
         }
         private void OnExitApp(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
-        private void OnCloseWindow(object sender, CancelEventArgs e)
+        private async void OnCloseWindow(object sender, CancelEventArgs e)
         {
-            if (this.textEditor.IsModified)
+            if (textEditor.IsModified)
             {
-                var v = MessageBox.Show("Do you want to save this file ?",
-                    "Batch File is modify !",
-                    MessageBoxButton.YesNo, MessageBoxImage.Information);
-                if (v == MessageBoxResult.Yes)
-                {
-                    SaveFile();
-                }
+                await whenBatchFileModified();
             }
         }
-        private void OpenPropertiesSettingWindow(object sender, RoutedEventArgs e)
-        {
-            View.PropertiesSetting vpropertiess = new View.PropertiesSetting();
-            vpropertiess.Show();
-        }
-
-        private async void BatchFileIsModifyShow(object sender, RoutedEventArgs e)
+        private async Task whenBatchFileModified()
         {
             var mySettings = new MetroDialogSettings()
             {
@@ -217,16 +194,23 @@ namespace Ginkgo
                     OpenFileWithWindow();
                     break;
                 case MessageDialogResult.FirstAuxiliary:
-                    return;
+                    break;
                 default:
                     break;
             }
         }
-        private void MenuOpenEventMethod(object sender, RoutedEventArgs e)
+
+        private void OpenPropertiesSettingWindow(object sender, RoutedEventArgs e)
         {
-            if (currentFile != null && this.textEditor.IsModified)
+            View.PropertiesSetting vpropertiess = new View.PropertiesSetting();
+            vpropertiess.Show();
+        }
+
+        private async void MenuOpenEventMethod(object sender, RoutedEventArgs e)
+        {
+            if (CurrentFile != null && textEditor.IsModified)
             {
-                BatchFileIsModifyShow(sender, e);
+                await whenBatchFileModified();
                 return;
             }
             OpenFileWithWindow();
@@ -243,57 +227,61 @@ namespace Ginkgo
                 DefaultExt = ".bat",
                 Filter = "Batch Script (*.bat;*.cmd;*.nt)|*.bat;*.cmd;*.nt|Other File|*.*"
             };
-            var result = dlg.ShowDialog();
-            if (result == true)
-            {
-                this.textEditor.Save(dlg.FileName);
-                currentFile = dlg.FileName;
-                Regex reg = new Regex("\\.(bat|cmd|nt)");
-                if (reg.IsMatch(currentFile))
-                {
-                    this.fileLanguage.Text = "Batch File";
-                }
-                else
-                {
-                    var filename = System.IO.Path.GetFileName(currentFile);
-                    if (filename.LastIndexOf(".") > 0)
-                        this.fileLanguage.Text = filename.Substring(filename.LastIndexOf(".") + 1).ToUpper() + " File";
-                    else
-                        this.fileLanguage.Text = filename;
-                }
-                UpdateTitle();
-            }
-            else
+            if (dlg.ShowDialog() != true)
             {
                 return;
             }
+
+            textEditor.Save(dlg.FileName);
+            CurrentFile = dlg.FileName;
+            Regex reg = new Regex("\\.(bat|cmd|nt)");
+            if (reg.IsMatch(CurrentFile))
+            {
+                fileLanguage.Text = "Batch File";
+            }
+            else
+            {
+                var filename = System.IO.Path.GetFileName(CurrentFile);
+                if (filename.LastIndexOf(".") > 0)
+                    fileLanguage.Text = filename.Substring(filename.LastIndexOf(".") + 1).ToUpper() + " File";
+                else
+                    fileLanguage.Text = filename;
+            }
+            UpdateTitle();
         }
         private void MenuCloseEventMethod(object sender, RoutedEventArgs e)
         {
-            if (this.textEditor.IsModified)
+            if (textEditor.IsModified)
             {
                 MenuSaveEventMethod(sender, e);
             }
-            currentFile = null;
-            this.textEditor.Clear();
-            this.textEditor.IsModified = false;
-            this.fileLanguage.Text = "";
-            this.fileEncoding.Text = "";
-            this.fileSize.Text = "";
+            CurrentFile = null;
+            textEditor.Clear();
+            textEditor.IsModified = false;
+            fileLanguage.Text = "";
+            fileEncoding.Text = "";
+            fileSize.Text = "";
             UpdateTitle();
         }
         private void OpenCurrentFolder(object sender, RoutedEventArgs e)
         {
-            var dir = System.IO.Path.GetDirectoryName(currentFile);
+            if (CurrentFile == null)
+            {
+                return;
+            }
+            var dir = System.IO.Path.GetDirectoryName(CurrentFile);
             if (dir != null)
+            {
                 System.Diagnostics.Process.Start("Explorer.exe", dir);
+            }
+
         }
 
         private async void BatchFileRunAsyn(bool isKeep)
         {
             if (textEditor.Text.Length == 0)
                 return;
-            if (currentFile == null || this.textEditor.IsModified)
+            if (CurrentFile == null || textEditor.IsModified)
             {
                 var mySettings = new MetroDialogSettings()
                 {
@@ -320,11 +308,11 @@ namespace Ginkgo
             }
             if (isKeep)
             {
-                System.Diagnostics.Process.Start("cmd.exe", "/k " + currentFile);
+                System.Diagnostics.Process.Start("cmd.exe", "/k " + CurrentFile);
             }
             else
             {
-                System.Diagnostics.Process.Start("cmd.exe", "/c " + currentFile);
+                System.Diagnostics.Process.Start("cmd.exe", "/c " + CurrentFile);
             }
 
         }

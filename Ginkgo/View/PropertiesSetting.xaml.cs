@@ -20,7 +20,7 @@ namespace Ginkgo.View
     /// <summary>
     /// PropertiesSetting.xaml 的交互逻辑
     /// </summary>
-    public partial class PropertiesSetting :MetroWindow
+    public partial class PropertiesSetting : MetroWindow
     {
         public PropertiesSetting()
         {

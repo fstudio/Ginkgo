@@ -1,25 +1,31 @@
-﻿<controls:MetroWindow  x:Class="Ginkgo.MainWindow"
+﻿<mah:MetroWindow  x:Class="Ginkgo.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonEdit"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:zone="clr-namespace:Ginkgo.View"
-        EnableDWMDropShadow="True"
         Title="Ginkgo Batch Editor"
         WindowTransitionsEnabled="False"
-        WindowTitleBrush="DimGray"
-        TitleCaps="False" Height="500" Width="800" 
+        Height="500" Width="800"
+        TitleCharacterCasing="Normal"
+        TitleForeground="{DynamicResource MahApps.Brushes.ThemeForeground}"
         Closing="OnCloseWindow" FontFamily="Segoe UI">
-    <controls:MetroWindow.WindowButtonCommands>
-        <controls:WindowButtonCommands Style="{DynamicResource MahApps.Metro.Styles.WindowButtonCommands.Win10}" />
-    </controls:MetroWindow.WindowButtonCommands>
+    <mah:MetroWindow.Resources>
+        <Style TargetType="mah:WindowButtonCommands" BasedOn="{StaticResource MahApps.Styles.WindowButtonCommands.Base}" >
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+            <Setter Property="DarkCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Close.Dark.Win10}" />
+            <Setter Property="LightCloseButtonStyle" Value="{DynamicResource MahApps.Styles.Button.MetroWindow.Close.Light.Win10}" />
+            <Setter Property="Template" Value="{StaticResource MahApps.Templates.WindowButtonCommands.Win10}" />
+        </Style>
+        <Style BasedOn="{StaticResource MahApps.Styles.CheckBox.Win10}" TargetType="{x:Type CheckBox}">
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+        </Style>
+    </mah:MetroWindow.Resources>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskBar" 
                          Overlay="Ginkgo.ico"
@@ -109,4 +115,4 @@
             <TextBlock Margin="110,0,0,0" Foreground="Black" Name="filenewline"></TextBlock>
         </StatusBar>
     </Grid>
-</controls:MetroWindow >
+</mah:MetroWindow >
